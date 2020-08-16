@@ -19,6 +19,7 @@
     "homepage": "https://github.com/wm-ytakano/UTAOS_Slack_viewer#readme",
     "dependencies": {
         "fs": "0.0.1-security",
+        "moment": "^2.27.0",
         "nroonga": "^0.4.3",
         "request": "^2.88.2"
     },
