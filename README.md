@@ -4,11 +4,19 @@ UTokyo AOS Slack 過去ログ
 
 ## セットアップ
 
+### Groonga
+
+-   `npm i`で node に必要なパッケージをインストール
 -   エクスポートした zip を解凍したものを exported/ に置く
 -   `./setup.sh`を実行
 
-## Groonga メモ
+### Node.js
 
--   HTTP サーバー起動 `groonga -p 10041 -d --protocol http database/slack.db`
--   管理画面 http://127.0.0.1:10041/
--   終了 http://127.0.0.1:10041/d/shutdown
+-   ログインユーザの設定。users/users.json を作成し以下のようにしてユーザーを設定
+    ```json
+    [{ "username": "username", "password": "password" }]
+    ```
+
+## リンク
+
+-   [Slack のアーカイブ - Scrapbox](https://scrapbox.io/ytakano-open/Slack%E3%81%AE%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96)

@@ -4,7 +4,7 @@
     "description": "UTokyo AOS Slack 過去ログ",
     "main": "index.js",
     "scripts": {
-        "json2json": "node json2json.js"
+        "start": "node app.js"
     },
     "repository": {
         "type": "git",
@@ -18,9 +18,15 @@
     },
     "homepage": "https://github.com/wm-ytakano/UTAOS_Slack_viewer#readme",
     "dependencies": {
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "express-session": "^1.17.1",
         "fs": "0.0.1-security",
         "moment": "^2.27.0",
         "nroonga": "^0.4.3",
+        "passport": "^0.4.1",
+        "passport-local": "^1.0.0",
+        "pug": "^3.0.0",
         "request": "^2.88.2"
     },
     "devDependencies": {
