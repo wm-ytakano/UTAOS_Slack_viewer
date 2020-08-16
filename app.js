@@ -1,13 +1,20 @@
 const fs = require("fs");
 const express = require("express");
 const session = require("express-session");
+const flash = require("connect-flash");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const log4js = require("log4js");
+const logger = log4js.getLogger();
+logger.level = "debug";
+logger.debug("start");
 
 const app = express();
 app.set("view engine", "pug");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
     session({
         secret: "secret",
@@ -22,18 +29,24 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
-// 認証設定
+// strategy
 const users = JSON.parse(fs.readFileSync("users/users.json", "utf8"));
-const localStrategy = new LocalStrategy((username, password, done) => {
-    for (const user of users) {
-        if (user.username === username && user.password === password) {
-            return done(null, user);
+passport.use(
+    new LocalStrategy((username, password, done) => {
+        for (const user of users) {
+            if (user.username === username && user.password === password) {
+                return done(null, user);
+            }
         }
-    }
-    return done(null, false);
-});
-passport.use(localStrategy);
+        return done(null, false, {
+            message: "ユーザー名またはパスワードが正しくありません。",
+        });
+    })
+);
+
+// passport
 passport.serializeUser((user, done) => {
     done(null, user);
 });
@@ -41,38 +54,23 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 });
 
-// Routing
-function isAuthenticated(req, res, next) {
+// routings
+app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
-        return next();
+        res.render("home");
     } else {
-        res.render("login", { message: "" });
+        res.render("login", { error: req.flash("error") });
     }
-}
-
-app.get("/login", (req, res) => {
-    res.render("login", { message: "" });
 });
-
 app.post(
-    "/login",
-    passport.authenticate(
-        "local",
-        {
-            successRedirect: "/",
-            failureRedirect: "/login",
-        },
-        (req, res) => {
-            res.render("login", {
-                message: "ユーザー名またはパスワードが正しくありません。",
-            });
-        }
-    )
+    "/",
+    passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/",
+        failureFlash: true,
+        badRequestMessage: "ユーザー名とパスワードを入力して下さい",
+    })
 );
-
-app.get("/", isAuthenticated, (req, res) => {
-    res.render("top");
-});
 
 const port = 3011;
 app.listen(port, () => {});

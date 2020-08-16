@@ -3,14 +3,15 @@ html
     head
         title ログイン - #{title}
     body
-        form(action="/login" method="post")
-        div
-            label ユーザー名：
-            input(type="text" name="username")
-        div
-            label パスワード：
-            input(type="password" name="password")
-        div(style="color: red")
-            span= message
-        div
-            input(type="submit" value="ログイン")
+        form(action="/" method="post")
+            div
+                label ユーザー名：
+                input(type="text" name="username")
+            div
+                label パスワード：
+                input(type="password" name="password")
+            if error != ''
+                div(style="color: red")
+                    span #{error}
+            div
+                input(type="submit" value="ログイン")
